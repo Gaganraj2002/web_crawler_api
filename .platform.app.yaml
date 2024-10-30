@@ -1,5 +1,5 @@
 # The name of this app. Must be unique within a project.
-name: app
+name: crawler
 
 # The runtime the application uses. The 'type' key defines the base container
 # image that will be used to run the application. There is a separate base
@@ -21,3 +21,58 @@ mounts:
 
 # The size of the persistent disk of the application (in MB).
 disk: 2048
+
+# The relationships of the application with services or other applications.
+# The key is the name of the relationship as it will be exposed to the
+# application in the PLATFORM_RELATIONSHIPS variable. The value is in the form
+# `<service name>:<endpoint name>`.
+relationships:
+  database: 'db:postgresql'
+
+# The configuration of app when it is exposed to the web.
+web:
+  # The command to run to start the application.
+  commands:
+    start: 'uvicorn app.main:app --host 0.0.0.0 --port $PORT'
+  # The ports that are exposed to the web.
+  locations:
+    '/':
+      # The paths that should be served by the application.
+      root: 'public'
+      # The commands that should be run to handle requests.
+      passthru: true
+      # The paths that should be served as static files.
+      allow: false
+      scripts: false
+
+# The configuration of the workers.
+workers:
+  crawler:
+    commands:
+      start: 'python -m app.crawler'
+
+# The configuration of the cron jobs.
+crons:
+  crawl:
+    # The command to run.
+    command: 'python -m app.crawler'
+    # The schedule to run the command on.
+    schedule: '0 * * * *'
+
+# The configuration of the dependencies.
+dependencies:
+  python:
+    fastapi: '*'
+    uvicorn: '*'
+    requests: '*'
+    beautifulsoup4: '*'
+    loguru: '*'
+
+# The configuration of the hooks.
+hooks:
+  # The command to run after the application is built.
+  build: |
+    pip install -r requirements.txt
+  # The command to run after the application is deployed.
+  deploy: |
+    python -m app.crawler
