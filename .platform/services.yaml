@@ -1,0 +1,15 @@
+# The services of the project.
+#
+# Each service listed will be deployed
+# to power your Platform.sh project.
+# More information: https://docs.platform.sh/add-services.html
+# Full list of available services: https://docs.platform.sh/add-services.html#available-services
+
+# PostgreSQL service configuration
+db:
+  type: 'postgresql:13'
+  disk: 2048
+
+# Redis service configuration
+cache:
+  type: 'redis:6.0'
