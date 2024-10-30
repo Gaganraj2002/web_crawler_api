@@ -97,10 +97,3 @@ curl -X POST "http://127.0.0.1:8000/crawl" -H "Content-Type: application/json" -
   "https://example.com/page1/subpage2"
 ]
 ```
-
-git init
-git add .
-git commit -m "first commit"
-git branch -M main
-git remote add origin https://github.com/Gaganraj2002/web_crawler_api.git
-git push -u origin main
